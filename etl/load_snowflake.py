@@ -6,7 +6,6 @@ import os
 import sys
 import pandas as pd
 import snowflake.connector
-from snowflake.connector.pandas_tools import write_pandas
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -54,7 +53,7 @@ def run_sql_file(conn, filepath: str):
 
 
 def load_table(conn, table_name: str):
-    """Load a CSV into a Snowflake table using write_pandas."""
+    """Load a CSV into a Snowflake table using direct INSERT via executemany."""
     path = os.path.join(DATA_DIR, f"{table_name}.csv")
     if not os.path.exists(path):
         print(f"  ❌  Missing file: {path}")
@@ -62,27 +61,37 @@ def load_table(conn, table_name: str):
 
     df = pd.read_csv(path)
 
-    # Snowflake column names must be upper-case for write_pandas
-    df.columns = [c.upper() for c in df.columns]
+    # Replace NaN with None so Snowflake gets NULL
+    df = df.where(pd.notnull(df), None)
 
-    # Convert boolean columns
+    # Convert Python bool strings to actual bools
     for col in df.select_dtypes(include="object").columns:
-        if df[col].dropna().isin(["True", "False"]).all():
+        sample = df[col].dropna()
+        if not sample.empty and sample.isin(["True", "False"]).all():
             df[col] = df[col].map({"True": True, "False": False})
 
-    success, nchunks, nrows, _ = write_pandas(
-        conn,
-        df,
-        table_name.upper(),
-        database=SNOWFLAKE_CONFIG["database"],
-        schema=SNOWFLAKE_CONFIG["schema"],
-        overwrite=True,
-        quote_identifiers=False,
-    )
+    cur = conn.cursor()
+    # Truncate first so re-runs are safe
+    cur.execute(f"TRUNCATE TABLE IF EXISTS {table_name.upper()}")
 
-    status = "✅" if success else "❌"
-    print(f"  {status}  {table_name.upper():<15} {nrows:>6,} rows loaded")
-    return nrows
+    placeholders = ", ".join(["%s"] * len(df.columns))
+    insert_sql   = f"INSERT INTO {table_name.upper()} VALUES ({placeholders})"
+    # Convert any remaining float NaN to None for Snowflake NULL
+    import math
+    def clean(v):
+        if v is None: return None
+        if isinstance(v, float) and math.isnan(v): return None
+        return v
+    rows = [tuple(clean(v) for v in r) for r in df.itertuples(index=False, name=None)]
+
+    # Batch in chunks of 1 000 to avoid request-size limits
+    chunk = 1000
+    for i in range(0, len(rows), chunk):
+        cur.executemany(insert_sql, rows[i:i+chunk])
+
+    cur.close()
+    print(f"  ✅  {table_name.upper():<15} {len(df):>6,} rows loaded")
+    return len(df)
 
 
 # ─────────────────────────────────────────
