@@ -225,15 +225,17 @@ GRID = "#2e2820"
 T    = dict(
     paper_bgcolor=BG, plot_bgcolor=BG,
     font=dict(family="DM Sans", color="#7a6e62", size=12),
-    xaxis=dict(gridcolor=GRID, linecolor=GRID, zerolinecolor=GRID),
-    yaxis=dict(gridcolor=GRID, linecolor=GRID, zerolinecolor=GRID),
     colorway=["#f0a500","#2ec4a9","#e05c4b","#9b6dff","#4e9eff","#f06b00","#79d4c4"],
     margin=dict(l=0, r=0, t=28, b=0),
     legend=dict(bgcolor=BG, font=dict(color="#7a6e62"), orientation="h", y=-0.15),
     hoverlabel=dict(bgcolor="#1f1b16", font_color="#f0e6d3", bordercolor="#2e2820"),
 )
+AXIS = dict(gridcolor=GRID, linecolor=GRID, zerolinecolor=GRID)
+
 def th(fig, h=None):
     fig.update_layout(**T)
+    fig.update_xaxes(**AXIS)
+    fig.update_yaxes(**AXIS)
     if h: fig.update_layout(height=h)
     return fig
 
@@ -439,11 +441,10 @@ with t1:
             hovertemplate="Week %{x} · %{y}<br>Orders: %{z:.0f}<extra></extra>",
             xgap=2, ygap=3,
         ))
-        fig4.update_layout(**T, height=200,
-            xaxis=dict(showgrid=False, showticklabels=False, linecolor="rgba(0,0,0,0)"),
-            yaxis=dict(showgrid=False, linecolor="rgba(0,0,0,0)", tickfont=dict(size=10)),
-            margin=dict(l=0,r=0,t=10,b=0),
-        )
+        th(fig4, h=200)
+        fig4.update_layout(margin=dict(l=0,r=0,t=10,b=0))
+        fig4.update_xaxes(showgrid=False, showticklabels=False, linecolor="rgba(0,0,0,0)")
+        fig4.update_yaxes(showgrid=False, linecolor="rgba(0,0,0,0)", tickfont=dict(size=10))
         st.plotly_chart(fig4, use_container_width=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
@@ -527,10 +528,7 @@ with t2:
             dict(label="Discount %",   values=prod["avg_discount_pct"], range=[0,20]),
         ],
     ))
-    fig3.update_layout(**T, height=320,
-        paper_bgcolor=BG, plot_bgcolor=BG,
-        font=dict(color="#7a6e62"),
-    )
+    th(fig3, h=320)
     fig3.update_traces(
         unselected_line_color="rgba(46,196,169,0.1)",
         labelangle=0,
@@ -652,7 +650,8 @@ with t3:
             hovertemplate="$%{value:,.0f}<extra></extra>",
         ),
     ))
-    fig_s.update_layout(**T, height=380, font=dict(size=11, color="#c4b8aa"))
+    th(fig_s, h=380)
+    fig_s.update_layout(font=dict(size=11, color="#c4b8aa"))
     st.plotly_chart(fig_s, use_container_width=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
