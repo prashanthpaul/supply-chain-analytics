@@ -1,0 +1,7 @@
+carrier,total_shipments,on_time_count,avg_delay_days,avg_shipment_cost,total_shipment_cost,on_time_pct
+DHL,787,705,0.61,81.0,63746.88,89.58
+FedEx,843,740,0.72,79.78,67252.81,87.78
+Kuehne+Nagel,823,719,0.71,79.07,65074.94,87.36
+Maersk,873,766,0.71,79.63,69520.04,87.74
+UPS,863,754,0.7,81.6,70419.47,87.37
+USPS,807,717,0.54,78.58,63412.86,88.85

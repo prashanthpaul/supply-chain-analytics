@@ -1,0 +1,13 @@
+region,segment,customers,orders,revenue,gross_profit,avg_order_value,margin_pct
+Asia Pacific,Enterprise,3,513,2464321.9,1405619.9,4803.75,57.04
+Asia Pacific,Mid-Market,3,519,2819266.2,1609592.2,5432.11,57.09
+Asia Pacific,SMB,1,173,1052138.0,585012.0,6081.72,55.6
+Europe,Mid-Market,3,472,2433157.05,1350592.05,5154.99,55.51
+Europe,SMB,4,680,3422579.45,1938331.45,5033.21,56.63
+Latin America,SMB,3,531,2672830.2,1496715.2,5033.58,56.0
+Middle East,Enterprise,1,154,900696.4,505628.4,5848.68,56.14
+Middle East,Mid-Market,2,350,1843878.7,1058695.7,5268.22,57.42
+Middle East,SMB,1,168,878790.9,494724.9,5230.9,56.3
+North America,Enterprise,3,464,2520195.05,1430925.05,5431.45,56.78
+North America,Mid-Market,2,318,1708543.65,960605.65,5372.78,56.22
+North America,SMB,4,654,3427998.8,1927994.8,5241.59,56.24

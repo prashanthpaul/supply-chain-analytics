@@ -1,0 +1,21 @@
+product_id,product_name,category,sub_category,orders,units_sold,revenue,gross_profit,avg_discount_pct,margin_pct
+P001,Laptop Pro 15,Electronics,Computers,257,6475,5533929.35,2620179.35,5.04,47.35
+P002,Wireless Headset,Electronics,Audio,264,6614,553976.05,322486.05,5.78,58.21
+P003,Office Chair Ergx,Furniture,Seating,267,6920,1626044.7,1037844.7,5.58,63.83
+P004,Steel Beam 10ft,Raw Materials,Metal,235,5941,534384.5,296744.5,5.23,55.53
+P005,Cotton Fabric 10m,Textiles,Fabric,257,6474,256716.6,140184.6,5.47,54.61
+P006,Auto Brake Kit,Automotive,Parts,229,5530,685776.0,381626.0,4.83,55.65
+P007,PVC Pipe 2in,Plastics,Piping,244,6095,126531.9,77771.9,5.61,61.46
+P008,Solar Panel 300W,Electronics,Energy,235,5859,1386568.95,829963.95,5.21,59.86
+P009,Standing Desk,Furniture,Desks,242,6147,2335925.55,1598285.55,4.9,68.42
+P010,Hydraulic Pump,Heavy Equip,Machinery,235,5600,3436745.0,1868745.0,5.45,54.38
+P011,LED Flood Light,Electronics,Lighting,231,5862,361114.0,214564.0,5.09,59.42
+P012,Shipping Pallet,Logistics,Packaging,253,7063,120480.3,63976.3,5.26,53.1
+P013,Thermal Sensor,Electronics,Sensors,242,6296,507734.75,318854.75,5.1,62.8
+P014,Aluminum Sheet 4x8,Raw Materials,Metal,235,5672,592454.5,337214.5,4.91,56.92
+P015,Safety Helmet,Safety,PPE,261,6484,171794.0,113438.0,5.67,66.03
+P016,Network Switch 24p,Electronics,Networking,243,5904,1388386.65,827506.65,5.56,59.6
+P017,Forklift Battery,Heavy Equip,Power,260,6393,2586656.25,1435916.25,4.75,55.51
+P018,Polyester Resin 5kg,Plastics,Resin,274,6982,362518.75,208914.75,5.36,57.63
+P019,Conveyor Belt 5m,Heavy Equip,Machinery,260,6606,3267836.0,1880576.0,4.69,57.55
+P020,Fire Extinguisher,Safety,Safety,272,6621,308822.5,189644.5,5.04,61.41
