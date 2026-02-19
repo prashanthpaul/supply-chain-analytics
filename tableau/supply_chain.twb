@@ -1,0 +1,385 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- ============================================================
+     Supply Chain Analytics — Tableau Workbook
+     Connect to Snowflake: SUPPLY_CHAIN.ANALYTICS
+     Views used: VW_MONTHLY_REVENUE, VW_PRODUCT_PERFORMANCE,
+                 VW_SUPPLIER_SCORECARD, VW_REGIONAL_SUMMARY,
+                 VW_CARRIER_PERFORMANCE
+     ============================================================ -->
+
+<workbook source-build='2023.3.0' source-platform='mac' version='21.4' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <preferences>
+    <color-palette name='Supply Chain Palette' type='regular'>
+      <color>#4f8ef7</color>
+      <color>#34d399</color>
+      <color>#f59e0b</color>
+      <color>#ef4444</color>
+      <color>#a78bfa</color>
+      <color>#06b6d4</color>
+    </color-palette>
+  </preferences>
+
+  <datasources>
+
+    <!-- ─────────────────────────────────────────
+         DATA SOURCE 1: Monthly Revenue
+         ───────────────────────────────────────── -->
+    <datasource caption='Monthly Revenue' inline='true' name='monthly_revenue' version='21.4'>
+      <connection authentication='username-password' class='snowflake'
+        dbname='SUPPLY_CHAIN' schema='ANALYTICS' server='YOUR_ACCOUNT.snowflakecomputing.com'
+        username='YOUR_USERNAME' warehouse='COMPUTE_WH'>
+        <relation name='VW_MONTHLY_REVENUE' table='[ANALYTICS].[VW_MONTHLY_REVENUE]' type='table' />
+      </connection>
+      <column datatype='date'    name='[month]'        role='dimension' type='ordinal'     caption='Month' />
+      <column datatype='integer' name='[year]'         role='dimension' type='ordinal'     caption='Year' />
+      <column datatype='integer' name='[month_num]'    role='dimension' type='ordinal'     caption='Month Number' />
+      <column datatype='string'  name='[month_label]'  role='dimension' type='nominal'     caption='Month Label' />
+      <column datatype='integer' name='[orders]'       role='measure'   type='quantitative' caption='Orders' />
+      <column datatype='real'    name='[revenue]'      role='measure'   type='quantitative' caption='Revenue' />
+      <column datatype='real'    name='[cogs]'         role='measure'   type='quantitative' caption='COGS' />
+      <column datatype='real'    name='[gross_profit]' role='measure'   type='quantitative' caption='Gross Profit' />
+      <column datatype='real'    name='[margin_pct]'   role='measure'   type='quantitative' caption='Margin %' />
+    </datasource>
+
+    <!-- ─────────────────────────────────────────
+         DATA SOURCE 2: Product Performance
+         ───────────────────────────────────────── -->
+    <datasource caption='Product Performance' inline='true' name='product_performance' version='21.4'>
+      <connection authentication='username-password' class='snowflake'
+        dbname='SUPPLY_CHAIN' schema='ANALYTICS' server='YOUR_ACCOUNT.snowflakecomputing.com'
+        username='YOUR_USERNAME' warehouse='COMPUTE_WH'>
+        <relation name='VW_PRODUCT_PERFORMANCE' table='[ANALYTICS].[VW_PRODUCT_PERFORMANCE]' type='table' />
+      </connection>
+      <column datatype='string' name='[product_id]'      role='dimension' type='nominal'     caption='Product ID' />
+      <column datatype='string' name='[product_name]'    role='dimension' type='nominal'     caption='Product Name' />
+      <column datatype='string' name='[category]'        role='dimension' type='nominal'     caption='Category' />
+      <column datatype='string' name='[sub_category]'    role='dimension' type='nominal'     caption='Sub-Category' />
+      <column datatype='integer' name='[orders]'         role='measure'   type='quantitative' caption='Orders' />
+      <column datatype='integer' name='[units_sold]'     role='measure'   type='quantitative' caption='Units Sold' />
+      <column datatype='real'   name='[revenue]'         role='measure'   type='quantitative' caption='Revenue' />
+      <column datatype='real'   name='[gross_profit]'    role='measure'   type='quantitative' caption='Gross Profit' />
+      <column datatype='real'   name='[margin_pct]'      role='measure'   type='quantitative' caption='Margin %' />
+      <column datatype='real'   name='[avg_discount_pct]' role='measure'  type='quantitative' caption='Avg Discount %' />
+    </datasource>
+
+    <!-- ─────────────────────────────────────────
+         DATA SOURCE 3: Supplier Scorecard
+         ───────────────────────────────────────── -->
+    <datasource caption='Supplier Scorecard' inline='true' name='supplier_scorecard' version='21.4'>
+      <connection authentication='username-password' class='snowflake'
+        dbname='SUPPLY_CHAIN' schema='ANALYTICS' server='YOUR_ACCOUNT.snowflakecomputing.com'
+        username='YOUR_USERNAME' warehouse='COMPUTE_WH'>
+        <relation name='VW_SUPPLIER_SCORECARD' table='[ANALYTICS].[VW_SUPPLIER_SCORECARD]' type='table' />
+      </connection>
+      <column datatype='string' name='[supplier_id]'           role='dimension' type='nominal'     caption='Supplier ID' />
+      <column datatype='string' name='[supplier_name]'         role='dimension' type='nominal'     caption='Supplier Name' />
+      <column datatype='string' name='[supplier_country]'      role='dimension' type='nominal'     caption='Country' />
+      <column datatype='string' name='[supplier_category]'     role='dimension' type='nominal'     caption='Category' />
+      <column datatype='real'   name='[reliability_score]'     role='measure'   type='quantitative' caption='Reliability Score' />
+      <column datatype='integer' name='[contracted_lead_days]' role='measure'   type='quantitative' caption='Contracted Lead Days' />
+      <column datatype='integer' name='[total_shipments]'      role='measure'   type='quantitative' caption='Total Shipments' />
+      <column datatype='real'   name='[on_time_rate_pct]'      role='measure'   type='quantitative' caption='On-Time Rate %' />
+      <column datatype='real'   name='[avg_delay_days]'        role='measure'   type='quantitative' caption='Avg Delay Days' />
+      <column datatype='real'   name='[total_shipping_cost]'   role='measure'   type='quantitative' caption='Total Shipping Cost' />
+      <column datatype='real'   name='[revenue_handled]'       role='measure'   type='quantitative' caption='Revenue Handled' />
+    </datasource>
+
+    <!-- ─────────────────────────────────────────
+         DATA SOURCE 4: Regional Summary
+         ───────────────────────────────────────── -->
+    <datasource caption='Regional Summary' inline='true' name='regional_summary' version='21.4'>
+      <connection authentication='username-password' class='snowflake'
+        dbname='SUPPLY_CHAIN' schema='ANALYTICS' server='YOUR_ACCOUNT.snowflakecomputing.com'
+        username='YOUR_USERNAME' warehouse='COMPUTE_WH'>
+        <relation name='VW_REGIONAL_SUMMARY' table='[ANALYTICS].[VW_REGIONAL_SUMMARY]' type='table' />
+      </connection>
+      <column datatype='string' name='[region]'           role='dimension' type='nominal'     caption='Region' />
+      <column datatype='string' name='[segment]'          role='dimension' type='nominal'     caption='Segment' />
+      <column datatype='integer' name='[customers]'       role='measure'   type='quantitative' caption='Customers' />
+      <column datatype='integer' name='[orders]'          role='measure'   type='quantitative' caption='Orders' />
+      <column datatype='real'   name='[revenue]'          role='measure'   type='quantitative' caption='Revenue' />
+      <column datatype='real'   name='[gross_profit]'     role='measure'   type='quantitative' caption='Gross Profit' />
+      <column datatype='real'   name='[margin_pct]'       role='measure'   type='quantitative' caption='Margin %' />
+      <column datatype='real'   name='[avg_order_value]'  role='measure'   type='quantitative' caption='Avg Order Value' />
+    </datasource>
+
+    <!-- ─────────────────────────────────────────
+         DATA SOURCE 5: Carrier Performance
+         ───────────────────────────────────────── -->
+    <datasource caption='Carrier Performance' inline='true' name='carrier_performance' version='21.4'>
+      <connection authentication='username-password' class='snowflake'
+        dbname='SUPPLY_CHAIN' schema='ANALYTICS' server='YOUR_ACCOUNT.snowflakecomputing.com'
+        username='YOUR_USERNAME' warehouse='COMPUTE_WH'>
+        <relation name='VW_CARRIER_PERFORMANCE' table='[ANALYTICS].[VW_CARRIER_PERFORMANCE]' type='table' />
+      </connection>
+      <column datatype='string'  name='[carrier]'              role='dimension' type='nominal'     caption='Carrier' />
+      <column datatype='integer' name='[total_shipments]'      role='measure'   type='quantitative' caption='Total Shipments' />
+      <column datatype='real'    name='[on_time_pct]'          role='measure'   type='quantitative' caption='On-Time %' />
+      <column datatype='real'    name='[avg_delay_days]'       role='measure'   type='quantitative' caption='Avg Delay Days' />
+      <column datatype='real'    name='[avg_shipment_cost]'    role='measure'   type='quantitative' caption='Avg Shipment Cost' />
+      <column datatype='real'    name='[total_shipment_cost]'  role='measure'   type='quantitative' caption='Total Shipment Cost' />
+    </datasource>
+
+  </datasources>
+
+  <!-- ─────────────────────────────────────────
+       WORKSHEETS
+       ───────────────────────────────────────── -->
+  <worksheets>
+
+    <!-- Sheet 1: Revenue Trend Bar Chart -->
+    <worksheet name='Revenue Trend'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Monthly Revenue' name='monthly_revenue' />
+          </datasources>
+          <datasource-dependencies datasource='monthly_revenue'>
+            <column-instance column='[month]'       derivation='None' name='[none:month:ok]'        pivot='key' type='ordinal' />
+            <column-instance column='[revenue]'     derivation='Sum'  name='[sum:revenue:ok]'        pivot='value' type='quantitative' />
+            <column-instance column='[gross_profit]' derivation='Sum' name='[sum:gross_profit:ok]'   pivot='value' type='quantitative' />
+          </datasource-dependencies>
+          <shelf-sorts>
+            <field-sort-spec column='[none:month:ok]' datasource='monthly_revenue' direction='ASC' />
+          </shelf-sorts>
+        </view>
+        <style>
+          <style-rule element='mark'>
+            <encoding attr='mark-type' value='bar' />
+          </style-rule>
+        </style>
+        <rows>[sum:revenue:ok]</rows>
+        <cols>[none:month:ok]</cols>
+        <marks class='automatic' />
+      </table>
+    </worksheet>
+
+    <!-- Sheet 2: Top Products by Revenue -->
+    <worksheet name='Top Products'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Product Performance' name='product_performance' />
+          </datasources>
+          <datasource-dependencies datasource='product_performance'>
+            <column-instance column='[product_name]' derivation='None' name='[none:product_name:nk]' pivot='key'   type='nominal' />
+            <column-instance column='[revenue]'      derivation='Sum'  name='[sum:revenue:ok]'        pivot='value' type='quantitative' />
+            <column-instance column='[category]'     derivation='None' name='[none:category:nk]'      pivot='key'   type='nominal' />
+          </datasource-dependencies>
+        </view>
+        <style>
+          <style-rule element='mark'>
+            <encoding attr='mark-type' value='bar' />
+          </style-rule>
+        </style>
+        <rows>[none:product_name:nk]</rows>
+        <cols>[sum:revenue:ok]</cols>
+        <marks class='automatic'>
+          <mark class='color'>
+            <encoding attr='color' field='[none:category:nk]' type='nominal' />
+          </mark>
+        </marks>
+        <sort>
+          <field-sort-spec column='[sum:revenue:ok]' datasource='product_performance' direction='DESC' />
+        </sort>
+      </table>
+    </worksheet>
+
+    <!-- Sheet 3: Supplier On-Time Rate -->
+    <worksheet name='Supplier On-Time Rate'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Supplier Scorecard' name='supplier_scorecard' />
+          </datasources>
+          <datasource-dependencies datasource='supplier_scorecard'>
+            <column-instance column='[supplier_name]'  derivation='None' name='[none:supplier_name:nk]' pivot='key'   type='nominal' />
+            <column-instance column='[on_time_rate_pct]' derivation='Avg' name='[avg:on_time_rate_pct:ok]' pivot='value' type='quantitative' />
+            <column-instance column='[avg_delay_days]' derivation='Avg'  name='[avg:avg_delay_days:ok]'  pivot='value' type='quantitative' />
+          </datasource-dependencies>
+        </view>
+        <style>
+          <style-rule element='mark'>
+            <encoding attr='mark-type' value='bar' />
+          </style-rule>
+        </style>
+        <rows>[none:supplier_name:nk]</rows>
+        <cols>[avg:on_time_rate_pct:ok]</cols>
+        <marks class='automatic'>
+          <mark class='color'>
+            <encoding attr='color' field='[avg:on_time_rate_pct:ok]' palette='green-red diverging' type='quantitative' />
+          </mark>
+        </marks>
+      </table>
+    </worksheet>
+
+    <!-- Sheet 4: Revenue by Region (Map-ready) -->
+    <worksheet name='Regional Revenue'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Regional Summary' name='regional_summary' />
+          </datasources>
+          <datasource-dependencies datasource='regional_summary'>
+            <column-instance column='[region]'   derivation='None' name='[none:region:nk]'  pivot='key'   type='nominal' />
+            <column-instance column='[segment]'  derivation='None' name='[none:segment:nk]' pivot='key'   type='nominal' />
+            <column-instance column='[revenue]'  derivation='Sum'  name='[sum:revenue:ok]'  pivot='value' type='quantitative' />
+          </datasource-dependencies>
+        </view>
+        <style>
+          <style-rule element='mark'>
+            <encoding attr='mark-type' value='bar' />
+          </style-rule>
+        </style>
+        <rows>[sum:revenue:ok]</rows>
+        <cols>[none:region:nk]</cols>
+        <marks class='automatic'>
+          <mark class='color'>
+            <encoding attr='color' field='[none:segment:nk]' type='nominal' />
+          </mark>
+        </marks>
+      </table>
+    </worksheet>
+
+    <!-- Sheet 5: Carrier Performance -->
+    <worksheet name='Carrier Performance'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Carrier Performance' name='carrier_performance' />
+          </datasources>
+          <datasource-dependencies datasource='carrier_performance'>
+            <column-instance column='[carrier]'          derivation='None' name='[none:carrier:nk]'          pivot='key'   type='nominal' />
+            <column-instance column='[on_time_pct]'      derivation='Avg'  name='[avg:on_time_pct:ok]'        pivot='value' type='quantitative' />
+            <column-instance column='[avg_shipment_cost]' derivation='Avg' name='[avg:avg_shipment_cost:ok]'  pivot='value' type='quantitative' />
+          </datasource-dependencies>
+        </view>
+        <style>
+          <style-rule element='mark'>
+            <encoding attr='mark-type' value='circle' />
+          </style-rule>
+        </style>
+        <rows>[avg:on_time_pct:ok]</rows>
+        <cols>[avg:avg_shipment_cost:ok]</cols>
+        <marks class='automatic'>
+          <mark class='label'>
+            <encoding attr='label' field='[none:carrier:nk]' type='nominal' />
+          </mark>
+        </marks>
+      </table>
+    </worksheet>
+
+    <!-- Sheet 6: Margin % Scatter (Revenue vs Margin) -->
+    <worksheet name='Revenue vs Margin'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Product Performance' name='product_performance' />
+          </datasources>
+          <datasource-dependencies datasource='product_performance'>
+            <column-instance column='[revenue]'    derivation='Sum'  name='[sum:revenue:ok]'    pivot='value' type='quantitative' />
+            <column-instance column='[margin_pct]' derivation='Avg'  name='[avg:margin_pct:ok]' pivot='value' type='quantitative' />
+            <column-instance column='[units_sold]' derivation='Sum'  name='[sum:units_sold:ok]' pivot='value' type='quantitative' />
+            <column-instance column='[category]'   derivation='None' name='[none:category:nk]'  pivot='key'   type='nominal' />
+            <column-instance column='[product_name]' derivation='None' name='[none:product_name:nk]' pivot='key' type='nominal' />
+          </datasource-dependencies>
+        </view>
+        <style>
+          <style-rule element='mark'>
+            <encoding attr='mark-type' value='circle' />
+          </style-rule>
+        </style>
+        <rows>[avg:margin_pct:ok]</rows>
+        <cols>[sum:revenue:ok]</cols>
+        <marks class='automatic'>
+          <mark class='color'>
+            <encoding attr='color' field='[none:category:nk]' type='nominal' />
+          </mark>
+          <mark class='size'>
+            <encoding attr='size' field='[sum:units_sold:ok]' type='quantitative' />
+          </mark>
+          <mark class='label'>
+            <encoding attr='label' field='[none:product_name:nk]' type='nominal' />
+          </mark>
+        </marks>
+      </table>
+    </worksheet>
+
+  </worksheets>
+
+  <!-- ─────────────────────────────────────────
+       DASHBOARD: Supply Chain Executive Dashboard
+       ───────────────────────────────────────── -->
+  <dashboards>
+    <dashboard name='Supply Chain Executive Dashboard'>
+      <style>
+        <style-rule element='dashboard'>
+          <encoding attr='background' value='#f8f9fa' />
+        </style-rule>
+      </style>
+      <size maxheight='900' maxwidth='1600' minheight='900' minwidth='1600' />
+
+      <zones>
+        <!-- Title Banner -->
+        <zone h='60' id='1' type='text' w='1600' x='0' y='0'>
+          <zone-style>
+            <format attr='background' value='#1a1a2e' />
+          </zone-style>
+          <text>Supply Chain Analytics Executive Dashboard — 2022–2024</text>
+        </zone>
+
+        <!-- Revenue Trend (top-left, wide) -->
+        <zone h='320' id='2' name='Revenue Trend' type='view' w='900' x='0' y='60'>
+          <zone-style>
+            <format attr='border' value='#dee2e6' />
+          </zone-style>
+        </zone>
+
+        <!-- Regional Revenue (top-right) -->
+        <zone h='320' id='3' name='Regional Revenue' type='view' w='700' x='900' y='60'>
+          <zone-style>
+            <format attr='border' value='#dee2e6' />
+          </zone-style>
+        </zone>
+
+        <!-- Top Products (bottom-left) -->
+        <zone h='320' id='4' name='Top Products' type='view' w='540' x='0' y='380'>
+          <zone-style>
+            <format attr='border' value='#dee2e6' />
+          </zone-style>
+        </zone>
+
+        <!-- Supplier On-Time Rate (bottom-center) -->
+        <zone h='320' id='5' name='Supplier On-Time Rate' type='view' w='540' x='540' y='380'>
+          <zone-style>
+            <format attr='border' value='#dee2e6' />
+          </zone-style>
+        </zone>
+
+        <!-- Carrier Performance (bottom-right) -->
+        <zone h='320' id='6' name='Carrier Performance' type='view' w='520' x='1080' y='380'>
+          <zone-style>
+            <format attr='border' value='#dee2e6' />
+          </zone-style>
+        </zone>
+
+        <!-- Revenue vs Margin scatter (bottom strip) -->
+        <zone h='200' id='7' name='Revenue vs Margin' type='view' w='1600' x='0' y='700'>
+          <zone-style>
+            <format attr='border' value='#dee2e6' />
+          </zone-style>
+        </zone>
+      </zones>
+
+      <!-- Dashboard Filters (applied globally) -->
+      <deviceLayouts>
+        <deviceLayout deviceType='desktop' name='Default'>
+          <size maxheight='900' maxwidth='1600' minheight='900' minwidth='1600' />
+        </deviceLayout>
+      </deviceLayouts>
+
+    </dashboard>
+  </dashboards>
+
+</workbook>

@@ -1,0 +1,24 @@
+# Environment
+.env
+
+# Generated data (large CSVs)
+data/raw/
+
+# Generated reports
+reports/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+
+# macOS
+.DS_Store
+
+# Streamlit
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
